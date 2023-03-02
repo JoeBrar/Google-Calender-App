@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Google Calendar</title>
+</head>
+<body>
+    <h1>My Google Calendar</h1>
+    <ul>
+    {% for event in events %}
+        <li>{{ event.summary }} - {{ event.start.dateTime }}</li>
+    {% empty %}
+        <li>No events found.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

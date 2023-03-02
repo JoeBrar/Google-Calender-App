@@ -15,20 +15,18 @@ import json
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 x = "a"
-
-
 def authenticate_btn(request):
     template = loader.get_template('google_calendar/authenticate.html')
     return HttpResponse(template.render())
 
 
-def google_authenticate(request):
+def GoogleCalendarInitView(request):
     flow = Flow.from_client_secrets_file(
         os.path.join(settings.BASE_DIR, 'client_secrets.json'),
         scopes=['https://www.googleapis.com/auth/calendar'],
         #redirect_uri=request.build_absolute_uri(reverse('google_authenticate_callback')),
         redirect_uri=
-        'https://My-Google-Calendar-App.joebrar.repl.co/google-authenticate-callback/',
+        'https://My-Google-Calendar-App.joebrar.repl.co/GoogleCalendarRedirectView/',
     )
     authorization_url, state = flow.authorization_url(
         access_type='offline',
@@ -41,18 +39,18 @@ def google_authenticate(request):
     return redirect(authorization_url)
 
 
-def google_authenticate_callback(request):
+def GoogleCalendarRedirectView(request):
     global x
     state = request.session.get('google_auth_state', None)
     if state is None:
-        return redirect(reverse('google_authenticate'))
+        return redirect(reverse('GoogleCalendarInitView'))
 
     flow = Flow.from_client_secrets_file(
         os.path.join(settings.BASE_DIR, 'client_secrets.json'),
         scopes=['https://www.googleapis.com/auth/calendar'],
-        #redirect_uri=request.build_absolute_uri(reverse('google_authenticate_callback')),
+        #redirect_uri=request.build_absolute_uri(reverse('GoogleCalendarRedirectView')),
         redirect_uri=
-        'https://My-Google-Calendar-App.joebrar.repl.co/google-authenticate-callback/',
+        'https://My-Google-Calendar-App.joebrar.repl.co/GoogleCalendarRedirectView/',
         state=state,
     )
 
@@ -62,11 +60,8 @@ def google_authenticate_callback(request):
     print(request.user.google_oauth2_credentials)
     #request.user.save()
     x = request.user.google_oauth2_credentials
-    return redirect(reverse('my_calendar_view'))
+    #return redirect(reverse('my_calendar_view'))
 
-
-def my_calendar_view(request):
-    global x
     print("value of x is :" + x)
     #request.user.google_oauth2_credentials
     credentials = Credentials.from_authorized_user_info(
@@ -83,8 +78,12 @@ def my_calendar_view(request):
     except HttpError as error:
         if error.resp.status == 401:
             # The user's credentials have been revoked. Reauthenticate the user.
-            return redirect(reverse('google_authenticate'))
+            return redirect(reverse('GoogleCalendarInitView'))
         else:
             raise
 
     return render(request, 'google_calendar/calendar.html', {'events': events})
+
+
+#def my_calendar_view(request):
+    

@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>My Google Calendar</title>
+    <style>
+      *{
+        margin: 0;
+        padding:0;
+      }
+      h1{
+        text-align:center;
+        background-color:#c6ecbc;
+        font-size:35px;
+        font-family:"Times New Roman", Times, serif;
+        padding:10px 0px;
+      }
+      .btn-class{
+        margin-top:25px;
+        text-align:center;
+        font-size: 18px;
+      }
+      .btn-class button{
+        margin-top:15px;
+        padding: 5px 10px;
+        font-size: 15px;
+      }
+    </style>
 </head>
 <body>
-    <h1>Authenticate with Google Calendar</h1>
-    <p>Click the button below to authenticate with your Google Calendar account:</p>
-    <form action="google-authenticate/">
-        <button type="submit">Authenticate with Google</button>
-    </form>
+    <h1>Google Calendar App</h1>
+    <div class='btn-class'>
+      <p>Click the button below to sign-in with your Google Calendar account and get your Events:</p>
+      <form action="GoogleCalendarInitView/">
+          <button type="submit">Sign-in with Google</button>
+      </form>
+    </div>
 </body>
 </html>
